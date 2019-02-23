@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Young's To Do List</title>
+<style type="text/css">
+	#wrap {
+		width:300px;
+		margin:0px auto;
+	}
+	
+	#top,#bottom {
+		width:300px;
+		height:400px;
+		float:left;
+		margin:0px auto;
+		text-align: center;
+	}
+	
+	#bottom {
+		border-top: 1px solid #333;
+	}
+	
+	#todoTab, #finTab {
+		width:300px;
+	}
+	
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script type="text/javascript">
+	var ls = window.localStorage;
+	var tdCnt = 0;
+	var finCnt = 0;
+
+	$(function() {
+		
+		// setLsData();
+		
+		$("#addBtn").click(function() {
+			toDo = $("#todo").val().trim();
+			
+			if(toDo == "") {
+				alert("할 일을 입력해주세요.");
+				$("#todo").focus();
+				return;
+			}
+			
+			if ($("#todoTab tr").length > 4) {
+				alert("할  일은 5개까지만 추가 가능합니다.\n기존 일들을 완료 후 추가해주세요.");
+				return;
+			}
+			
+			var tdCode = getTdCode();
+			$("#todoTab:last").append("<tr id='"+tdCode+"' name='tdTr'><td width='50'><input type='checkbox' value='"+toDo+"'></td><td width='200'>"
+					+toDo+"</td><td width='50'><a href='#void' onclick='/*$(this).parent().parent().remove();*/'>-</a></td>");
+			
+			ls.setItem(tdCode,toDo);
+		});
+		
+		$("#todoTab").click(function(){
+			
+			$.each($("[name='tdTr'] input"),function(idx, cb){
+				if ($(cb).is(":checked")){
+					
+				}
+			});
+			
+		});
+		
+		/* $("#todoTab").click(function() {
+			
+			$.each($(".finTr input"), function(idx, cb){
+				// finCb 클래스 안에 존재하는 input을 가져와서 만약 체크돼어 있으면
+				// 해당 줄을 삭제처리, 끝낸일 테이블에 추가
+				// 몇 번째 줄이 선택됐는지 알아야 함. :eq를 써볼 것
+				
+				if($(cb).is(":checked")) {
+					var date = new Date();
+					$("#finTab:last").append("<tr><td width='200'>"+$(cb).val()+"</td><td width='80'>"+
+							((date.getFullYear()-2000)+"-"+(date.getMonth()+1)+"-"+date.getDate())+
+							"</td><td width='20'><a href='#void' onclick='$(this).parent().parent().remove()'>-</a></tr>");;
+					$(cb).parent().parent().remove();
+				}
+			});
+		}); */
+	});
+	
+	function getTdCode() {
+		ls.setItem("tdCnt",(tdCnt+1));
+		return "td-"+tdCnt++;
+	}
+	
+	function getFinCode() {
+		ls.setItem("finCnt",(finCnt+1));
+		return "fin-"+finCnt++;
+	}
+	
+	function setLsData() {
+		
+	}
+	
+	function removeLs(key) {
+		localStorage.removeItem(key);
+	}
+</script>
+</head>
+<body>
+<div id=wrap>
+	<div id="top">
+		<h3>Young's To Do List</h3>
+		<form name="todoFrm">
+			<input type="text" id="todo"><input type="button" value="add" id="addBtn">
+		</form>
+		<br/>
+		<h4>남은 일</h4>
+		<table id="todoTab"></table>
+	</div>
+	<div id="bottom">
+		<h4>끝낸 일</h4>
+		<table id="finTab"></table>
+	</div>
+</div>
+</body>
+</html>
