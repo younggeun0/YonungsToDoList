@@ -34,7 +34,7 @@
 
 	$(function() {
 		
-		// setLsData();
+		setLsData();
 		
 		$("#addBtn").click(function() {
 			toDo = $("#todo").val().trim();
@@ -52,37 +52,28 @@
 			
 			var tdCode = getTdCode();
 			$("#todoTab:last").append("<tr id='"+tdCode+"' name='tdTr'><td width='50'><input type='checkbox' value='"+toDo+"'></td><td width='200'>"
-					+toDo+"</td><td width='50'><a href='#void' onclick='/*$(this).parent().parent().remove();*/'>-</a></td>");
+					+toDo+"</td><td width='50'><a href='#void' onclick='removeLs(\""+tdCode+"\")'>-</a></td></tr>");
 			
 			ls.setItem(tdCode,toDo);
 		});
 		
 		$("#todoTab").click(function(){
-			
 			$.each($("[name='tdTr'] input"),function(idx, cb){
 				if ($(cb).is(":checked")){
 					
-				}
-			});
-			
-		});
-		
-		/* $("#todoTab").click(function() {
-			
-			$.each($(".finTr input"), function(idx, cb){
-				// finCb 클래스 안에 존재하는 input을 가져와서 만약 체크돼어 있으면
-				// 해당 줄을 삭제처리, 끝낸일 테이블에 추가
-				// 몇 번째 줄이 선택됐는지 알아야 함. :eq를 써볼 것
-				
-				if($(cb).is(":checked")) {
+					var finCode = getFinCode();
 					var date = new Date();
-					$("#finTab:last").append("<tr><td width='200'>"+$(cb).val()+"</td><td width='80'>"+
-							((date.getFullYear()-2000)+"-"+(date.getMonth()+1)+"-"+date.getDate())+
-							"</td><td width='20'><a href='#void' onclick='$(this).parent().parent().remove()'>-</a></tr>");;
+					var value = $(cb).val()+" "+((date.getFullYear()-2000)+"-"+(date.getMonth()+1)+"-"+date.getDate());
+					$("#finTab:last").append("<tr id='"+finCode+"'><td width='280'>"+value
+							+"</td><td width='20'><a href='#void'onclick='removeLs(\""+finCode+"\")'>-</a></td></tr>");;
+					ls.removeItem($(cb).parent().parent().attr("id"));
+					tdCnt--;
+					ls.setItem("tdCnt",tdCnt);
 					$(cb).parent().parent().remove();
+					ls.setItem(finCode,value);
 				}
 			});
-		}); */
+		});
 	});
 	
 	function getTdCode() {
@@ -96,11 +87,51 @@
 	}
 	
 	function setLsData() {
+		tdCnt = ls.getItem("tdCnt");
+		finCnt = ls.getItem("finCnt");
 		
+		console.log(tdCnt);
+		console.log(finCnt);
+		
+		var tdCode = "";
+		var tdVal = "";
+		for(var i=0; i<(tdCnt+finCnt); i++) {
+			tdCode = "td-"+i;
+			tdVal = ls.getItem(tdCode);
+			
+			if (tdVal != null) {
+				$("#todoTab:last").append("<tr id='"+tdCode+"' name='tdTr'><td width='50'><input type='checkbox' value='"+tdVal
+						+"'></td><td width='200'>"
+						+tdVal+"</td><td width='50'><a href='#void' onclick='removeLs(\""+tdCode+"\")'>-</a></td></tr>");
+			}
+		}
+		
+		var finCode = "";
+		var finVal = "";
+		for(var i=0; i<(tdCnt+finCnt); i++) {
+			finCode = "fin-"+i;
+			finVal = ls.getItem(finCode);
+			
+			if (finVal != null) {
+				$("#finTab:last").append("<tr id='"+finCode+"'><td width='280'>"
+						+finVal+"</td><td width='20'><a href='#void' onclick='removeLs(\""+finCode+"\")'>-</a></td></tr>");
+			}
+		}
 	}
 	
 	function removeLs(key) {
+		
+		if(key.includes("td")) {
+			tdCnt--;
+			ls.setItem("tdCnt",tdCnt);
+		} else {
+			finCnt--;
+			ls.setItem("finCnt",finCnt);
+		}
+		
+		var target = "#"+key;
 		localStorage.removeItem(key);
+		$(target).remove();
 	}
 </script>
 </head>
