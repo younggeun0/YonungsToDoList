@@ -31,7 +31,7 @@
 	var ls = window.localStorage;
 	var tdCnt = 0;
 	var finCnt = 0;
-
+	
 	$(function() {
 		
 		setLsData();
@@ -61,41 +61,65 @@
 			$.each($("[name='tdTr'] input"),function(idx, cb){
 				if ($(cb).is(":checked")){
 					
-					var finCode = getFinCode();
-					var date = new Date();
-					var value = $(cb).val()+" "+((date.getFullYear()-2000)+"-"+(date.getMonth()+1)+"-"+date.getDate());
-					$("#finTab:last").append("<tr id='"+finCode+"'><td width='280'>"+value
-							+"</td><td width='20'><a href='#void'onclick='removeLs(\""+finCode+"\")'>-</a></td></tr>");;
-					ls.removeItem($(cb).parent().parent().attr("id"));
-					tdCnt--;
-					ls.setItem("tdCnt",tdCnt);
-					$(cb).parent().parent().remove();
-					ls.setItem(finCode,value);
+					if(finCnt < 10) {
+						var finCode = getFinCode();
+						var date = new Date();
+						var value = $(cb).val()+" "+((date.getFullYear()-2000)+"-"+(date.getMonth()+1)+"-"+date.getDate());
+						$("#finTab:last").append("<tr id='"+finCode+"'><td width='300'>"+value
+								+"</td></tr>");;
+						ls.removeItem($(cb).parent().parent().attr("id"));
+						tdCnt--;
+						ls.setItem("tdCnt",tdCnt);
+						$(cb).parent().parent().remove();
+						ls.setItem(finCode,value);
+					} else {
+						if (confirm("완료 목록은 10개까지 저장 가능합니다.\n기존 기록을 삭제하시겠습니까?")){
+							var target ="";
+							for(var i=0; i<10; i++) {
+								target = "fin-"+i;
+								ls.removeItem(target);
+								target="#"+target;	
+								$(target).remove();
+							}
+							ls.setItem("finCnt",0);	
+							location.href="main.html";
+						}
+						$(cb).prop("checked", false);
+					}
 				}
 			});
 		});
 	});
 	
 	function getTdCode() {
-		ls.setItem("tdCnt",(tdCnt+1));
+		if (tdCnt != null) {
+			ls.setItem("tdCnt",(parseInt(tdCnt)+1));
+		} else {
+			ls.setItem("tdCnt", 1);	
+		}
 		return "td-"+tdCnt++;
 	}
 	
 	function getFinCode() {
-		ls.setItem("finCnt",(finCnt+1));
+		if (finCnt != null) {
+			ls.setItem("finCnt",(parseInt(finCnt)+1));
+		} else {
+			ls.setItem("finCnt",1);
+		}
 		return "fin-"+finCnt++;
 	}
 	
 	function setLsData() {
 		tdCnt = ls.getItem("tdCnt");
 		finCnt = ls.getItem("finCnt");
+		var totalCnt = 0;
 		
 		console.log(tdCnt);
 		console.log(finCnt);
 		
 		var tdCode = "";
 		var tdVal = "";
-		for(var i=0; i<(tdCnt+finCnt); i++) {
+		for(var i=0; i<5; i++) {
 			tdCode = "td-"+i;
 			tdVal = ls.getItem(tdCode);
 			
@@ -108,26 +132,21 @@
 		
 		var finCode = "";
 		var finVal = "";
-		for(var i=0; i<(tdCnt+finCnt); i++) {
+		for(var i=0; i<10; i++) {
 			finCode = "fin-"+i;
 			finVal = ls.getItem(finCode);
 			
 			if (finVal != null) {
-				$("#finTab:last").append("<tr id='"+finCode+"'><td width='280'>"
-						+finVal+"</td><td width='20'><a href='#void' onclick='removeLs(\""+finCode+"\")'>-</a></td></tr>");
+				$("#finTab:last").append("<tr id='"+finCode+"'><td width='300'>"
+						+finVal+"</td></tr>");
 			}
 		}
 	}
 	
 	function removeLs(key) {
 		
-		if(key.includes("td")) {
-			tdCnt--;
-			ls.setItem("tdCnt",tdCnt);
-		} else {
-			finCnt--;
-			ls.setItem("finCnt",finCnt);
-		}
+		tdCnt--;
+		ls.setItem("tdCnt",tdCnt);
 		
 		var target = "#"+key;
 		localStorage.removeItem(key);
