@@ -36,25 +36,14 @@
 		
 		setLsData();
 		
+		$("#todo").keyup(function(event) {
+			if (event.which == 13) {
+				enterEvent();
+			}
+		});
+		
 		$("#addBtn").click(function() {
-			toDo = $("#todo").val().trim();
-			
-			if(toDo == "") {
-				alert("할 일을 입력해주세요.");
-				$("#todo").focus();
-				return;
-			}
-			
-			if ($("#todoTab tr").length > 4) {
-				alert("할  일은 5개까지만 추가 가능합니다.\n기존 일들을 완료 후 추가해주세요.");
-				return;
-			}
-			
-			var tdCode = getTdCode();
-			$("#todoTab:last").append("<tr id='"+tdCode+"' name='tdTr'><td width='50'><input type='checkbox' value='"+toDo+"'></td><td width='200'>"
-					+toDo+"</td><td width='50'><a href='#void' onclick='removeLs(\""+tdCode+"\")'>-</a></td></tr>");
-			
-			ls.setItem(tdCode,toDo);
+			enterEvent();
 		});
 		
 		$("#todoTab").click(function(){
@@ -90,6 +79,30 @@
 			});
 		});
 	});
+	
+	function enterEvent() {
+		toDo = $("#todo").val().trim();
+		
+		if(toDo == "") {
+			alert("할 일을 입력해주세요.");
+			$("#todo").focus();
+			return;
+		}
+		
+		if ($("#todoTab tr").length > 4) {
+			alert("할  일은 5개까지만 추가 가능합니다.\n기존 일들을 완료 후 추가해주세요.");
+			return;
+		}
+		
+		var tdCode = getTdCode();
+		$("#todoTab:last").append("<tr id='"+tdCode+"' name='tdTr'><td width='50'><input type='checkbox' value='"+toDo+"'></td><td width='200'>"
+				+toDo+"</td><td width='50'><a href='#void' onclick='removeLs(\""+tdCode+"\")'>-</a></td></tr>");
+		
+		ls.setItem(tdCode,toDo);
+		
+		$("#todo").val("");
+		$("#todo").focus();
+	}
 	
 	function getTdCode() {
 		if (tdCnt != null) {
@@ -158,9 +171,7 @@
 <div id=wrap>
 	<div id="top">
 		<h3>Young's To Do List</h3>
-		<form name="todoFrm">
-			<input type="text" id="todo"><input type="button" value="add" id="addBtn">
-		</form>
+		<input type="text" id="todo"><input type="button" value="add" id="addBtn">
 		<br/>
 		<h4>남은 일</h4>
 		<table id="todoTab"></table>
