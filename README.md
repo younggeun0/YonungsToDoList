@@ -7,10 +7,13 @@
 
 ![04](https://github.com/younggeun0/younggeun0.github.io/blob/master/_posts/img/toyProjects/toDoList/04.png?raw=true)
 
-## ERD 설계
+## DB 설계(ERD)
 
-* 클릭 시 flag를 'Y'로 수정처리
-
+* finish_flag는 DEFAULT 'N'처리
+  * 해야할 일 클릭 시 'Y'로 업데이트 처리
+* input_date는 DEFAULT SYSDATE
+* td_num은 SEQUENCE를 사용한 FUNCTION으로 생성('td_000000')
+  
 ![05](https://github.com/younggeun0/younggeun0.github.io/blob/master/_posts/img/toyProjects/toDoList/05.png?raw=true)
 
 ## Class Diagram 설계
