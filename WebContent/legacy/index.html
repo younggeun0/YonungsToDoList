@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>미루자 미루자 또 미루자</title>
+</head>
+<style type="text/css">
+	#wrap {
+		margin: 0px auto;
+		width:500px;
+		height:600px;
+	}
+	
+	#header {
+		background-color:#2B579A;
+		color: white;
+		width:500px;
+		height:60px;
+		text-align:center;
+		border-radius: 15px;
+	}
+	
+	h2 {
+		padding-top: 15px;
+	}
+	
+	#toDo {
+		width:500px;
+		height:250px;
+	}
+	
+	table {
+		width:500px;
+		text-align: center;
+		border-spacing: 0px;
+	}
+	
+	#done {
+		width:500px;
+		height:250px;
+	}
+</style>
+<body>
+<div id="wrap">
+	<div id="header">
+		<h2>영근쓰 할 일 목록</h2>
+	</div>
+	<div id="container">
+		<div id="toDo">
+			<table>
+				<tr style="border:1px solid #333;">
+					<th width="50px;">번호</th>
+					<th width="350px;">할일</th>
+					<th width="100px;">완료여부</th>
+				</tr>
+				<tr>
+					<td>1</td>
+					<td>이거</td>
+					<td><input type="checkbox"></td>
+				</tr>
+			</table>
+		</div>
+		<hr>
+		<div id="done">
+			<table>
+				<tr style="border:1px solid #333;">
+					<th width="50px;">번호</th>
+					<th width="300px;">완료된 할일</th>
+					<th width="100px;">완료시간</th>
+					<th width="50px;">삭제</th>
+				</tr>
+				<tr>
+					<td>1</td>
+					<td>이거</td>
+					<td>00-00-00</td>
+					<td><input type="checkbox"></td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</div>
+</body>
+</html>
