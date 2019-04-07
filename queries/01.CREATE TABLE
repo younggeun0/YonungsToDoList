@@ -1,0 +1,26 @@
+-- 할일 목록
+DROP TABLE to_do;
+
+-- 할일 목록
+CREATE TABLE to_do (
+	td_num      CHAR(8)       NOT NULL,
+	content     VARCHAR2(100) NOT NULL, 
+	finish_flag CHAR(1)       DEFAULT 'N',
+	input_date  DATE          DEFAULT SYSDATE 
+);
+
+-- 할일 목록 기본키
+CREATE UNIQUE INDEX PK_to_do
+	ON to_do ( -- 할일 목록
+		td_num ASC -- 할일 코드
+	);
+
+-- 할일 목록
+ALTER TABLE to_do
+	ADD
+		CONSTRAINT PK_to_do -- 할일 목록 기본키
+		PRIMARY KEY (
+			td_num -- 할일 코드
+		);
+    
+COMMIT;
