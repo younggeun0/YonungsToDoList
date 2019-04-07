@@ -1,1 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="to_do_mapper">
+  <select id="selectToDo" resultType="domain.ToDo" parameterType="String">
+    SELECT td_num, content, finish_flag, input_date
+    FROM to_do
+    WHERE finish_flag=#{ finish_flag }
+  </select>
+  
+  <insert id="insertToDo" parameterType="String">
+      INSERT INTO to_do(td_num,content)
+      VALUES(td_code, #{ content })
+  </insert>
+  
+  <update id="updateToDo" parameterType="String">
+      UPDATE to_do
+      SET    finish_flag='Y'
+      WHERE  td_num=#{ td_num }
+  </update>
+  
+  <delete id="deleteToDo" parameterType="String">
+      DELETE FROM to_do
+      WHERE td_num=#{ td_num }
+  </delete>
+</mapper>

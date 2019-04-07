@@ -10,8 +10,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import controller.AddController;
 import controller.Controller;
-import controller.ToDoController;
+import controller.FinishController;
+import controller.GetListController;
+import controller.RemoveController;
 
 
 @SuppressWarnings("serial")
@@ -21,9 +24,10 @@ public class MainController extends HttpServlet {
 
 	static {
 		cmdMap = new HashMap<String, Controller>();
-		cmdMap.put("insert", new ToDoController("insert"));
-		cmdMap.put("update", new ToDoController("update"));
-		cmdMap.put("delete", new ToDoController("delete"));
+		cmdMap.put("select", new GetListController());
+		cmdMap.put("insert", new AddController());
+		cmdMap.put("update", new FinishController());
+		cmdMap.put("delete", new RemoveController());
 	}
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -35,20 +39,17 @@ public class MainController extends HttpServlet {
 		String cmd = request.getParameter("cmd");
 		
 		if (cmd == null || "".equals(cmd)) {
-			movePage(request, response, "main.jsp", false);
-		} else if (cmdMap.containsKey(cmd)) {
-			
-			Controller controller = cmdMap.get(cmd);
-			
-			controller.execute();
-			
-			String url = controller.moveUrl();
-			boolean forwardFlag = controller.isFoward();
-			
-			movePage(request, response, url, forwardFlag);
-		} else {
-			movePage(request, response, "main.jsp", false);
-		}
+			cmd="select";
+		} 
+		
+		Controller controller = cmdMap.get(cmd);
+		
+		controller.execute(request, response);
+		
+		String url = controller.moveUrl();
+		boolean forwardFlag = controller.isFoward();
+		
+		movePage(request, response, url, forwardFlag);
 	}
 	
 	private void movePage(HttpServletRequest request, HttpServletResponse response, String url, boolean forwardFlag) throws ServletException, IOException {

@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!doctype html>
 <html>
   <head>
@@ -11,7 +12,6 @@
 		<link href="http://localhost:8080/to_do_list/common/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom styles for this template -->
     <link href="http://localhost:8080/to_do_list/common/css/pricing.css" rel="stylesheet">
-    
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
     <script type="text/javascript">
@@ -25,26 +25,12 @@
 	    			return;
 	    		}
 	    		
-	    		var url = "index.do";
-	    		var queryString = "cmd=insert&thing_to_do="+thingToDo;
-    			
-    			$.ajax({
-    				url:url,
-    				data:queryString,
-    				dataType:JSON,
-    				async:"false",
-    				error:function(xhr) {
-    					alert("에러코드 : "+xhr.status+", 에러메시지 : "+xhr.statusText);
-    				},
-    				success:function(result){
-    					// JSON 형태로 DB로부터 데이터를 조회해서 가져옴()
-    				}
-    			});
+	    		location.href="index.do?cmd=insert&todo="+thingToDo;
+ 					alert("추가되었습니다.");
+ 					$("#thingToDo").val("");
     		});
     	});
     </script>
-    
-    
   </head>
   <body>
 
@@ -85,12 +71,19 @@
       		</tr>
       	</thead>
       	<tbody>
+      	<c:if test="${ empty toDoList }">
       		<tr>
-      			<td>블라블라블라</td>
-      			<td>미완료</td>
-      			<td>2019-00-00</td>
-      			<td><a href="#" >삭제</a></td>
+      			<td colspan="4" align="center">조회된 결과가 없습니다.</td>
       		</tr>
+      	</c:if>
+      	<c:forEach items="${ toDoList }" var="toDo">
+      		<tr onclick="location.href='main.do?cmd=update&td_num='+'${ toDo.td_num }';">
+      			<td><c:out value="${ toDo.content }"/></td>
+      			<td>미완료<input type="hidden" value="${ toDo.td_num }"/></td>
+      			<td><c:out value="${ toDo.input_date }"/></td>
+      			<td><a href="main.do?cmd=delete&td_num=${ toDo.td_num }">삭제</a></td>
+      		</tr>
+      	</c:forEach>
       	</tbody>
       </table>
     </div>
@@ -112,12 +105,19 @@
       		</tr>
       	</thead>
       	<tbody>
+      	<c:if test="${ empty finishedList }">
       		<tr>
-      			<td>블라블라블라</td>
-      			<td>완료</td>
-      			<td>2019-00-00</td>
-      			<td><a href="#" >삭제</a></td>
+      			<td colspan="4" align="center">조회된 결과가 없습니다.</td>
       		</tr>
+      	</c:if>
+      	<c:forEach items="${ finishedList }" var="finishedToDo">
+      		<tr>
+      			<td><c:out value="${ finishedToDo.content }"/></td>
+      			<td>완료</td>
+      			<td><c:out value="${ finishedToDo.input_date }"/></td>
+      			<td><a href="main.do?cmd=delete&td_num=${ finishedToDo.td_num }">삭제</a></td>
+      		</tr>
+      	</c:forEach>
       	</tbody>
       </table>
     </div>
