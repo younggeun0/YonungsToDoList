@@ -1,4 +1,4 @@
-# To Do List
+# Youngs To Do List
 
 * 할일 목록을 저장하는 To Do List 토이 프로젝트
 * Bootstrap, MyBatis 사용, Model2 적용
